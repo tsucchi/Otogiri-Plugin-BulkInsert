@@ -4,7 +4,7 @@
       "ytnobody <ytnobody@gmail.com>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Minilla/v1.0.0, CPAN::Meta::Converter version 2.132140",
+   "generated_by" : "Minilla/v1.0.0, CPAN::Meta::Converter version 2.140640",
    "license" : [
       "perl_5"
    ],
@@ -59,6 +59,20 @@
       }
    },
    "release_status" : "unstable",
+   "resources" : {
+      "bugtracker" : {
+         "web" : "https://github.com/ytnobody/Otogiri-Plugin-BulkInsert/issues"
+      },
+      "homepage" : "https://github.com/ytnobody/Otogiri-Plugin-BulkInsert",
+      "repository" : {
+         "type" : "git",
+         "url" : "git://github.com/ytnobody/Otogiri-Plugin-BulkInsert.git",
+         "web" : "https://github.com/ytnobody/Otogiri-Plugin-BulkInsert"
+      }
+   },
    "version" : "0.01",
-   "x_authority" : "cpan:YTURTLE"
+   "x_authority" : "cpan:YTURTLE",
+   "x_contributors" : [
+      "Takuya Tsuchida <tsucchi@cpan.org>"
+   ]
 }
