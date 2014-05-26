@@ -7,6 +7,7 @@ Otogiri::Plugin::BulkInsert - bulk insert for Otogiri
     use Otogiri;
     use Otogiri::Plugin;
     
+
     my $otogiri = Otogiri->new(...);
     $otogiri->load_plugin('BulkInsert');
 
