@@ -15,10 +15,14 @@ sub bulk_insert {
     my $sql = sprintf('INSERT INTO %s (%s) VALUES (%s)', $table, $keys, $binds);
     my $sth = $self->dbh->prepare($sql);
 
+    my $txn = $self->txn_scope();
+
     for my $row (@$row_list) {
         my %rowdata = %$row;
         $sth->execute(@rowdata{@$key_list});
     }
+
+    $txn->commit();
 
     $sth->finish;
 }
