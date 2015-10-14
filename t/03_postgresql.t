@@ -26,6 +26,8 @@ EOSQL
 $db->do($builder);
 
 subtest 'bulk insert' => sub {
+    $db->delete('book');
+
     my @colnames = qw|title author|;
     my @rowdatas = (
         {title => 'Acmencyclopedia 2009', author => 'Makamaka Hannyaharamitu'},
@@ -45,6 +47,34 @@ subtest 'bulk insert' => sub {
     for my $i (0 .. $#rows) {
         my $row = $rows[$i];
         my $rowdata = $rowdatas[$i];
+        for my $colname (@colnames) {
+            is $row->{$colname}, $rowdata->{$colname};
+        }
+    }
+};
+
+subtest 'bulk insert using SQL::Maker::insert_multi' => sub {
+    $db->delete('book');
+
+    my @rowdatas = (
+        {title => 'Acmencyclopedia 2009', author => 'Makamaka Hannyaharamitu'},
+        {title => 'Acmencyclopedia Reverse', author => 'Makamaka Hannyaharamitu'},
+        {title => 'Acmencyclopedia 2010', author => 'Makamaka Hannyaharamitu'},
+        {title => 'Acmencyclopedia 2011', author => 'Makamaka Hannyaharamitu'},
+        {title => 'Acmencyclopedia 2012', author => 'Makamaka Hannyaharamitu'},
+        {title => 'Acmencyclopedia 2013', author => 'Makamaka Hannyaharamitu'},
+        {title => 'Miyabi-na-Perl Nyuumon', author => 'Miyabi-na-Rakuda'},
+        {title => 'Miyabi-na-Perl Nyuumon 2nd edition', author => 'Miyabi-na-Rakuda'},
+    );
+
+    ok($db->bulk_insert('book', \@rowdatas), 'succeed to bulk insert');
+
+    my @rows = $db->select('book');
+    is scalar(@rows), scalar(@rowdatas);
+    for my $i (0 .. $#rows) {
+        my $row = $rows[$i];
+        my $rowdata = $rowdatas[$i];
+        my @colnames = keys %$rowdata;
         for my $colname (@colnames) {
             is $row->{$colname}, $rowdata->{$colname};
         }

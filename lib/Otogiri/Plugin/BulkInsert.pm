@@ -7,6 +7,33 @@ our $VERSION = "0.02";
 our @EXPORT = qw(bulk_insert);
 
 sub bulk_insert {
+    my ($self, $table, $args, $opt) = @_;
+
+    my $dbh = $self->dbh;
+    my $can_use_sql_maker = $dbh->{Driver}->{Name} eq 'mysql' ? 1
+                          : $dbh->{Driver}->{Name} eq 'Pg' && $dbh->{pg_server_version} >= 82000 ;
+
+    if ( ref $opt eq 'ARRAY' && ref $opt->[0] eq 'HASH' ) {
+        $can_use_sql_maker = undef;
+    }
+
+    if ( $can_use_sql_maker ) {
+        Otogiri::Plugin::BulkInsert::_bulk_insert_using_sql_maker($self, $table, $args, $opt);
+    }
+    else {
+        Otogiri::Plugin::BulkInsert::_bulk_insert_plain($self, $table, $args, $opt);
+    }
+}
+
+sub _bulk_insert_using_sql_maker {
+    my ($self, $table, $args, $opt) = @_;
+
+    SQL::Maker->load_plugin('InsertMulti');
+    my ($sql, @binds) = $self->maker->insert_multi($table, $args, $opt);
+    $self->do($sql, @binds);
+}
+
+sub _bulk_insert_plain {
     my ($self, $table, $key_list, $row_list) = @_;
 
     my $keys = join(', ', @$key_list);
@@ -23,7 +50,6 @@ sub bulk_insert {
     }
 
     $txn->commit();
-
     $sth->finish;
 }
 
